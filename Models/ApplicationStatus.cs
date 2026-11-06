@@ -1,7 +1,8 @@
+namespace CRM.Models;
 public enum ApplicationStatus{
-    Submitted,
-    Interviewing(stage1),
-    Rejected,
-    Offer,
-    Testing(stage2)
+    Submetido,
+    EntrevistadeApresentacao,
+    Rejeitado,
+    OfertaAberta,
+    TesteTecnico
 }

@@ -8,14 +8,15 @@ public class Candidatura {
     public string Localizacao { get; set; }
     public string Tipo { get; set; }
     public string Status { get; set; }
-    public string DataCriacao { get; set; }
-    public string DataAtualizacao { get; set; }
-    public string DataExpiracao { get; set; }
-    public string DataPublicacao { get; set; }
-}
+    public Date DataCriacao { get; set; }
+    public Date DataAtualizacao { get; set; }
+    public Date DataExpiracao { get; set; }
+    public Date DataPublicacao { get; set; }
 
-public EstadoApplication {get; set;}
+
+public int ApplicationStatus {get; set;}
 
 public int CompanyId {get; set;}
 
 public Company? Company {get; set;}
+}

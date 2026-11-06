@@ -1,7 +1,7 @@
-public enum EstadoApplication{
+public enum ApplicationStatus{
     Submitted,
-    Interviewing (stage 1),
+    Interviewing(stage1),
     Rejected,
     Offer,
-    Testing (stage 2)
+    Testing(stage2)
 }

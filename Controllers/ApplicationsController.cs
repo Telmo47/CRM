@@ -31,7 +31,7 @@ public class ApplicationsController: Controller {
 
     [HttpGet]
     public IActionResult Create(){
-        ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Nome");
+        ViewBag.CompanyId = new SelectList(_context.Companies.OrderBy(c => c.Nome), "Id", "Nome");
         return View();
     }
 
@@ -43,7 +43,7 @@ public class ApplicationsController: Controller {
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Nome", application.CompanyId);
+        ViewBag.CompanyId = new SelectList(_context.Companies.OrderBy(c => c.Nome), "Id", "Nome", application.CompanyId);
         return View(application);
     }
 
@@ -55,7 +55,7 @@ public class ApplicationsController: Controller {
         var application = await _context.Applications.FindAsync(id);
         if (application == null) return NotFound();
 
-        ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Nome");
+        ViewBag.CompanyId = new SelectList(_context.Companies.OrderBy(c => c.Nome), "Id", "Nome");
 
         return View(application);
     }

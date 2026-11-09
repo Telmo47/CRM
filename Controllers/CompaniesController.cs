@@ -62,6 +62,7 @@ public class CompaniesController: Controller {
         if(ModelState.IsValid){
             _context.Update(company);
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Empresa atualizada com sucesso!";
             return RedirectToAction(nameof(Index));
         }
 

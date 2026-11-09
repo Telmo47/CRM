@@ -1,0 +1,44 @@
+@model CRM.Models.Company
+
+@{
+    ViewData["Title"] = "Editar Empresas";
+}
+
+<h2>Editar Empresas</h2>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Nome" class="form-label"></label>
+        <input asp-for="Nome" class="form-control" />
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Pais" class="form-label"></label>
+        <input asp-for="Pais" class="form-control" />
+        <span asp-validation-for="Pais" class="text-danger"></span>
+    </div>
+<div class="mb-3">
+        <label asp-for="Website" class="form-label"></label>
+        <input asp-for="Website" class="form-control" />
+        <span asp-validation-for="Website" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Cidade" class="form-label"></label>
+        <input asp-for="Cidade" class="form-control" />
+        <span asp-validation-for="Cidade" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Tec" class="form-label"></label>
+        <input asp-for="Tec" class="form-control" />
+        <span asp-validation-for="Tec" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar Alterações</button>
+    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+</form>

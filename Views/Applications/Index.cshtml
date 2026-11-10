@@ -11,6 +11,7 @@
 
 <form method="get" asp-action="Index" class="card card-body mb-4 shadow-sm">
     <div class="row g-3">
+        <select name="estado" class="form-select" asp-items="Html.GetEnumSelectList<CRM.Models.ApplicationStatus>()"></select>
         <div class="col-md-4">
             <input type="text" name="searchString" value="@ViewBag.CurrentSearch" class="form-control" placeholder="Pesquisar por nome..." />
         </div>

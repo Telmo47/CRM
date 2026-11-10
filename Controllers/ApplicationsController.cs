@@ -13,9 +13,31 @@ public class ApplicationsController: Controller {
         _context = context;
     }
 
-    public async Task<IActionResult> Index() {
-        var Applications = await _context.Applications.Include(a => a.Company).ToListAsync();   
-        return View(Applications);
+    public async Task<IActionResult> Index(int? companyId, ApplicationStatus? estado, string? searchString) {
+        var query = _context.Applications.Include(v => v.Company).AsQueryable();
+        // 1. Pesquisa por texto no Titulo da candidatura:
+        if (!string.IsNullOrWhiteSpace(searchString))    {
+        query = query.Where(a => a.Titulo.ToLower().Contains(searchString.ToLower()));        }
+
+    // 2. Filtro por Empresa:
+    if (companyId.HasValue)
+    {
+        query = query.Where(a => a.CompanyId == companyId.Value);
+    }
+
+    // 3. Filtro por Estado:
+    if (estado.HasValue)
+    {
+        query = query.Where(a => a.Estado == estado.Value);
+    }
+
+        ViewBag.CompanyId = new SelectList(_context.Companies.OrderBy(c => c.Nome), "Id", "Nome", companyId);
+        ViewBag.CurrentSearch = searchString;
+        ViewBag.CurrentEstado = estado;
+
+        // BUSCA FINAL: Só traz os dados filtrados pela 'query'!
+        var applications = await query.ToListAsync();
+        return View(applications);
 
     }
 

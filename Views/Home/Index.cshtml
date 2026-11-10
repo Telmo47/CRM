@@ -1,8 +1,32 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center py-4 bg-light rounded-3 mb-4">
+    <h1 class="display-5 fw-bold">Gestor de candidaturas</h1>
+    <p class="lead text-muted">Gestão das candidaturas com todas as caracteristicas das mesmas</p>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <h4 class="card-title text-primary">Empresas</h4>
+                <p class="card-text text-muted">Mostra as Empresas das candidaturas.</p>
+                <a asp-controller="Companies" asp-action="Index" class="btn btn-outline-primary">Ver Empresas</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <h4 class="card-title text-success">Candidaturas</h4>
+                <p class="card-text text-muted">As candidaturas das Empresas</p>
+                <a asp-controller="Applications" asp-action="Index" class="btn btn-outline-success">Ver Candidaturas</a>
+                <a asp-controller="Applications" asp-action="Create" class="btn btn-success ms-2">+ Novas candidaturas</a>
+            </div>
+        </div>
+    </div>
 </div>

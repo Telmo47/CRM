@@ -50,22 +50,34 @@
     </thead>
     <tbody>
     @foreach (var item in Model)
+{
+    var corDoBadge = item.Estado switch
     {
-        <tr>
-            <td>@item.Titulo</td>
-            <td>@item.Company?.Nome</td>
-            <td>@item.Estado</td>
-            <td>@item.Salario</td>
-            <td>@item.Tipo</td>
-            <td>@item.DataCriacao</td>
-            <td>@item.DataAtualizacao</td>
-            <td>@item.DataExpiracao</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Detalhes</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Apagar</a>
-            </td>
-        </tr>
-    }
+        ApplicationStatus.Submetido => "bg-primary",
+        ApplicationStatus.EntrevistadeApresentacao => "bg-info text-dark",
+        ApplicationStatus.TesteTecnico => "bg-warning text-dark",
+        ApplicationStatus.OfertaAberta => "bg-success",
+        ApplicationStatus.Rejeitado => "bg-danger",
+        _ => "bg-secondary"
+    };
+
+    <tr>
+        <td>@item.Titulo</td>
+        <td>@item.Company?.Nome</td>
+        <td>
+            <span class="badge @corDoBadge">@item.Estado</span>
+        </td>
+        <td>@item.Salario</td>
+        <td>@item.Tipo</td>
+        <td>@item.DataCriacao</td>
+        <td>@item.DataAtualizacao</td>
+        <td>@item.DataExpiracao</td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
+            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Detalhes</a>
+            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Apagar</a>
+        </td>
+    </tr>
+}
     </tbody>
 </table>

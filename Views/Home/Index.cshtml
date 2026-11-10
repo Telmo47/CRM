@@ -13,20 +13,22 @@
         <div class="card h-100 shadow-sm border-0">
             <div class="card-body text-center">
                 <h4 class="card-title text-primary">Empresas</h4>
-                <p class="card-text text-muted">Mostra as Empresas das candidaturas.</p>
-                <a asp-controller="Companies" asp-action="Index" class="btn btn-outline-primary">Ver Empresas</a>
-            </div>
+                <div class="display-4 fw-bold text-primary my-2">@ViewBag.TotalEmpresas</div>
+                <p class="card-text text-muted">Empresas registadas no sistema</p>
+                    <a asp-controller="Companies" asp-action="Index" class="btn btn-outline-primary">Ver Empresas</a>    
+                </div>
         </div>
     </div>
 
     <div class="col-md-6">
-        <div class="card h-100 shadow-sm border-0">
-            <div class="card-body text-center">
-                <h4 class="card-title text-success">Candidaturas</h4>
-                <p class="card-text text-muted">As candidaturas das Empresas</p>
-                <a asp-controller="Applications" asp-action="Index" class="btn btn-outline-success">Ver Candidaturas</a>
-                <a asp-controller="Applications" asp-action="Create" class="btn btn-success ms-2">+ Novas candidaturas</a>
-            </div>
+    <div class="card h-100 shadow-sm border-0">
+        <div class="card-body text-center">
+            <h4 class="card-title text-success">Candidaturas</h4>
+            <div class="display-4 fw-bold text-success my-2">@ViewBag.TotalCandidaturas</div>
+            <p class="card-text text-muted">Total de candidaturas registadas</p>
+            <a asp-controller="Applications" asp-action="Index" class="btn btn-outline-success">Ver Candidaturas</a>
+            <a asp-controller="Applications" asp-action="Create" class="btn btn-success ms-2">+ Nova Candidatura</a>
         </div>
     </div>
+</div>
 </div>

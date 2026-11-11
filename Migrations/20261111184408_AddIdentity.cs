@@ -33,14 +33,8 @@ namespace CRM.Migrations
                 oldClrType: typeof(string),
                 oldType: "text");
 
-            migrationBuilder.AlterColumn<decimal>(
-                name: "Salario",
-                table: "Applications",
-                type: "numeric",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
+            migrationBuilder.Sql(
+    "ALTER TABLE \"Applications\" ALTER COLUMN \"Salario\" TYPE numeric USING \"Salario\"::numeric");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Requisitos",

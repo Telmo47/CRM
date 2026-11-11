@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using CRM.Data;
 using CRM.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CRM.Controllers;
 
+[Authorize]
 public class ApplicationsController: Controller {
     private readonly ApplicationDbContext _context;
 

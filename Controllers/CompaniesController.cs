@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CRM.Data;
 using CRM.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CRM.Controllers;
 
+[Authorize]
 public class CompaniesController: Controller {
     private readonly ApplicationDbContext _context;
 

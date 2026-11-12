@@ -71,13 +71,13 @@ public class CompaniesController: Controller {
 
         return View(company);
     }
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpGet]
     public async Task<IActionResult> Delete(int id){
         var company = await _context.Companies.FindAsync(id);
         if (company != null){
             _context.Companies.Remove(company);
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Empresa apagada com sucesso!";
         }
         return RedirectToAction(nameof(Index));
     }

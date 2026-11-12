@@ -1,0 +1,16 @@
+@model CRM.Models.JobApplication
+@{ ViewData["Title"] = "Detalhes da Candidatura"; }
+<h2>Detalhes: @Model.Titulo</h2>
+<div class="card card-body shadow-sm">
+    <p><strong>Empresa:</strong> @Model.Company?.Nome</p>
+    <p><strong>Estado:</strong> @Model.Estado</p>
+    <p><strong>Salário:</strong> @Model.Salario</p>
+    <p><strong>Tipo:</strong> @Model.Tipo</p>
+    <p><strong>Descrição:</strong> @Model.Descricao</p>
+    <p><strong>Requisitos:</strong> @Model.Requisitos</p>
+    <p><strong>Criada em:</strong> @Model.DataCriacao.ToShortDateString()</p>
+</div>
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>

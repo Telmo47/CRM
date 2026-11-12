@@ -10,14 +10,12 @@
 <form asp-action="Create" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <!-- Campo de Texto Normal (ex: Titulo) -->
     <div class="mb-3">
         <label asp-for="Titulo" class="form-label"></label>
         <input asp-for="Titulo" class="form-control" />
         <span asp-validation-for="Titulo" class="text-danger"></span>
     </div>
 
-    <!-- Campo de Texto Longo (ex: Descricao) -->
     <div class="mb-3">
         <label asp-for="Descricao" class="form-label"></label>
         <textarea asp-for="Descricao" class="form-control" rows="3"></textarea>
@@ -30,7 +28,6 @@
         <span asp-validation-for="Requisitos" class="text-danger"></span>
     </div>
 
-    <!-- Campo Numérico (ex: Salario) -->
     <div class="mb-3">
         <label asp-for="Salario" class="form-label"></label>
         <input asp-for="Salario" class="form-control" type="number" step="0.01" />

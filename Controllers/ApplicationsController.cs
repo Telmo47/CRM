@@ -55,14 +55,18 @@ public class ApplicationsController: Controller {
         return View();
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(JobApplication application) {
-        if (ModelState.IsValid) {
-            _context.Add(application);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Create(JobApplication application) {
+    if (ModelState.IsValid) {
+        application.DataCriacao = application.DataCriacao.ToUniversalTime();
+        application.DataAtualizacao = application.DataAtualizacao.ToUniversalTime();
+        application.DataExpiracao = application.DataExpiracao.ToUniversalTime();
+
+        _context.Add(application);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
         ViewBag.CompanyId = new SelectList(_context.Companies.OrderBy(c => c.Nome), "Id", "Nome", application.CompanyId);
         return View(application);
     }
@@ -85,16 +89,21 @@ public class ApplicationsController: Controller {
     public async Task<IActionResult> Edit(int? id, JobApplication application) {
         if (id != application.Id) return NotFound();
 
-        if(ModelState.IsValid){
+        if (ModelState.IsValid) {
+            application.DataCriacao = application.DataCriacao.ToUniversalTime();
+            application.DataAtualizacao = application.DataAtualizacao.ToUniversalTime();
+            application.DataExpiracao = application.DataExpiracao.ToUniversalTime();
+
             _context.Update(application);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+        ViewBag.CompanyId = new SelectList(_context.Companies.OrderBy(c => c.Nome), "Id", "Nome", application.CompanyId);
         return View(application);
     }
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+
+    [HttpGet]
     public async Task<IActionResult> Delete(int id){
         var application = await _context.Applications.FindAsync(id);
         if (application != null){

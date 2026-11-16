@@ -4,16 +4,22 @@ using CRM.Data;
 using CRM.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using RabbitMQ.Client;
+using System.Text;
+using System.Text.Json;
 
 namespace CRM.Controllers;
 
 [Authorize]
 public class ApplicationsController: Controller {
     private readonly ApplicationDbContext _context;
+    private readonly ConnectionFactory _connectionFactory;
 
-    public ApplicationsController(ApplicationDbContext context){
+    public ApplicationsController(ApplicationDbContext context, ConnectionFactory connectionFactory){
         _context = context;
-    }
+        _connectionFactory = connectionFactory;
+}
+    
 
     public async Task<IActionResult> Index(int? companyId, ApplicationStatus? estado, string? searchString) {
         var query = _context.Applications.Include(v => v.Company).AsQueryable();
@@ -65,6 +71,38 @@ public async Task<IActionResult> Create(JobApplication application) {
 
         _context.Add(application);
         await _context.SaveChangesAsync();
+        
+var company = await _context.Companies.FindAsync(application.CompanyId);
+
+
+var eventMessage = new
+{
+    Id = application.Id,
+    Company = company?.Nome ?? "Desconhecida",
+    Date = application.DataCriacao
+};
+
+
+var json = JsonSerializer.Serialize(eventMessage);
+var body = Encoding.UTF8.GetBytes(json);
+
+
+using var connection = await _connectionFactory.CreateConnectionAsync();
+using var channel = await connection.CreateChannelAsync();
+
+
+await channel.QueueDeclareAsync(
+    queue: "application_created",
+    durable: false,
+    exclusive: false,
+    autoDelete: false,
+    arguments: null);
+
+
+await channel.BasicPublishAsync(
+    exchange: string.Empty,
+    routingKey: "application_created",
+    body: body);
         return RedirectToAction(nameof(Index));
     }
         ViewBag.CompanyId = new SelectList(_context.Companies.OrderBy(c => c.Nome), "Id", "Nome", application.CompanyId);

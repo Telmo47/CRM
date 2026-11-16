@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using CRM.Data;
 using CRM.Models;
 using Microsoft.AspNetCore.Identity;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddSingleton(sp =>
+{
+    var config = builder.Configuration.GetSection("RabbitMQ");
+    return new ConnectionFactory
+    {
+        HostName = config["HostName"] ?? "localhost",
+        Port = int.Parse(config["Port"] ?? "5672"),
+        UserName = config["UserName"] ?? "guest",
+        Password = config["Password"] ?? "guest"
+    };
+});
 
 var app = builder.Build();
 

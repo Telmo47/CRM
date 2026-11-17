@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>c317ea99-368f-4b53-a235-b9e1d986f4a1</UserSecretsId>
+    <DefaultItemExcludes>$(DefaultItemExcludes);JobNotificationWorker\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>

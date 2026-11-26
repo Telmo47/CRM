@@ -11,9 +11,7 @@ public class Worker(ILogger<Worker> logger, IConfiguration configuration, IEmail
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-
-        await emailSender.SendEmailAsync("admin@jobtracker.com", "JobTracker - Teste SMTP", "<h1>Sucesso!</h1><p>O serviço de email do Worker está a funcionar!</p>");
-        //Iniciar o consumidor do RabbitMQ
+        // 1. Iniciar o consumidor do RabbitMQ
         var factory = new ConnectionFactory { HostName = "localhost" };
         using var connection = await factory.CreateConnectionAsync(stoppingToken);
         using var channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken);
@@ -43,13 +41,12 @@ public class Worker(ILogger<Worker> logger, IConfiguration configuration, IEmail
 
         logger.LogInformation("🚀 Worker ligado ao RabbitMQ e à escuta de eventos!");
 
-        //Cronjob Diário com PeriodicTimer
+        // 2. Cronjob Diário com PeriodicTimer
         using var timer = new PeriodicTimer(TimeSpan.FromDays(1));
 
-        // Executar uma verificação logo no arranque para ver na consola
+        // Executar uma verificação logo no arranque
         await CheckStaleApplicationsAsync();
 
-        // E depois repete a cada 24 horas enquanto o serviço correr
         while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
         {
             await CheckStaleApplicationsAsync();
@@ -66,10 +63,12 @@ public class Worker(ILogger<Worker> logger, IConfiguration configuration, IEmail
             // Regra dos 14 dias:
             var dataLimite = DateTime.UtcNow.AddDays(-14);
 
+            // SQL com JOIN para trazer o nome da empresa:
             var sql = """
-                SELECT "Id", "Titulo", "DataCriacao", "Estado" 
-                FROM "Applications" 
-                WHERE "Estado" = 0 AND "DataCriacao" < @DataLimite
+                SELECT a."Id", a."Titulo", a."DataCriacao", a."Estado", c."Nome" AS "NomeEmpresa"
+                FROM "Applications" a
+                INNER JOIN "Companies" c ON a."CompanyId" = c."Id"
+                WHERE a."Estado" = 0 AND a."DataCriacao" < @DataLimite
             """;
 
             var vagas = await dbConnection.QueryAsync<StaleApplication>(sql, new { DataLimite = dataLimite });
@@ -80,8 +79,20 @@ public class Worker(ILogger<Worker> logger, IConfiguration configuration, IEmail
             foreach (var vaga in vagas)
             {
                 totalVagas++;
-                logger.LogWarning("⚠️ [SEM RESPOSTA HÁ +14 DIAS]: Vaga #{Id} - {Titulo} (Submetida em: {Data})", 
-                    vaga.Id, vaga.Titulo, vaga.DataCriacao);
+                logger.LogWarning("⚠️ [SEM RESPOSTA HÁ +14 DIAS]: Vaga #{Id} - {Titulo} da empresa {Empresa}", 
+                    vaga.Id, vaga.Titulo, vaga.NomeEmpresa);
+
+                var subject = $"Aviso: Vaga sem resposta há mais de 14 dias - {vaga.NomeEmpresa}";
+                var htmlBody = $"""
+                    <h2>Lembrete de Candidatura Esquecida</h2>
+                    <p>Já passaram mais de 14 dias desde que submeteste a tua candidatura para a vaga <strong>{vaga.Titulo}</strong> na empresa <strong>{vaga.NomeEmpresa}</strong>.</p>
+                    <p><strong>Data da submissão:</strong> {vaga.DataCriacao:dd/MM/yyyy}</p>
+                    <p>Considera enviar um email de follow-up para demonstrar interesse!</p>
+                """;
+
+                await Task.Delay(1100); // 1.1 segundos de intervalo
+
+                await emailSender.SendEmailAsync("candidato@jobtracker.com", subject, htmlBody);
             }
 
             if (totalVagas == 0)
@@ -96,4 +107,4 @@ public class Worker(ILogger<Worker> logger, IConfiguration configuration, IEmail
     }
 }
 
-public record StaleApplication(int Id, string Titulo, DateTime DataCriacao, int Estado);
+public record StaleApplication(int Id, string Titulo, DateTime DataCriacao, int Estado, string NomeEmpresa);

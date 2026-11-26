@@ -7,10 +7,12 @@ using Dapper;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
 
-public class Worker(ILogger<Worker> logger, IConfiguration configuration) : BackgroundService
+public class Worker(ILogger<Worker> logger, IConfiguration configuration, IEmailSender emailSender) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+
+        await emailSender.SendEmailAsync("admin@jobtracker.com", "JobTracker - Teste SMTP", "<h1>Sucesso!</h1><p>O serviço de email do Worker está a funcionar!</p>");
         //Iniciar o consumidor do RabbitMQ
         var factory = new ConnectionFactory { HostName = "localhost" };
         using var connection = await factory.CreateConnectionAsync(stoppingToken);

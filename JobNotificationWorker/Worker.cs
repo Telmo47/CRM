@@ -90,6 +90,8 @@ public class Worker(ILogger<Worker> logger, IConfiguration configuration, IEmail
                     <p>Considera enviar um email de follow-up para demonstrar interesse!</p>
                 """;
 
+                await Task.Delay(1100); // 1.1 segundos de intervalo
+
                 await emailSender.SendEmailAsync("candidato@jobtracker.com", subject, htmlBody);
             }
 
